@@ -7,7 +7,10 @@
 // 前端代码调用 Rust命令 示例：https://tauri.app/zh-cn/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
-    format!("Hello, {}! 前面的文字是你输入的,这段话是通过Vue调用Rust生成的", name)
+    format!(
+        "Hello, {}! 前面的文字是你输入的,这段话是通过Vue调用Rust生成的",
+        name
+    )
 }
 
 // 导入 系统拖托盘,示例：https://tauri.app/zh-cn/v1/guides/features/system-tray#configuring-a-system-tray-context-menu
@@ -16,8 +19,21 @@ use tauri::{Manager, SystemTray};
 // 导入 系统托盘上下文
 use tauri::{CustomMenuItem, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 
+// 导入窗口菜单，如果使用自定义窗口样式，不会生效
+use tauri::{Menu, MenuItem, Submenu};
+
 fn main() {
-    // 这里 `"quit".to_string()` 定义菜单项 ID，第二个参数是菜单项标签。
+    // 创建窗口顶部菜单 这里 `"quit".to_string()` 定义菜单项 ID，第二个参数是菜单项标签。
+    // 窗口菜单事件和 系统托盘事件写法一样
+    let windowQuit = CustomMenuItem::new("quit".to_string(), "Quit");
+    let windowClose = CustomMenuItem::new("close".to_string(), "Close");
+    let windowSubmenu = Submenu::new("File", Menu::new().add_item(windowQuit).add_item(windowClose));
+    let windowMenu = Menu::new()
+        .add_native_item(MenuItem::Copy)
+        .add_item(CustomMenuItem::new("hide", "Hide"))
+        .add_submenu(windowSubmenu);
+
+    // 创建系统托盘菜单 这里 `"quit".to_string()` 定义菜单项 ID，第二个参数是菜单项标签。
     let quit = CustomMenuItem::new("quit".to_string(), "退出应用");
 
     let show = CustomMenuItem::new("show".to_string(), "显示应用");
@@ -33,6 +49,7 @@ fn main() {
 
     // 构建tauri
     tauri::Builder::default()
+        .menu(windowMenu)
         .system_tray(tray)
         .on_system_tray_event(|app, event| match event {
             SystemTrayEvent::MenuItemClick { id, .. } => {
