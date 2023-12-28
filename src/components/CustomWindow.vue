@@ -1,5 +1,6 @@
 <!-- 自定义顶部窗口样式，需要在 tauri.confi.json中关闭 默认Windows窗口样式 windows.decorations = false， 如果不想要自定义窗口样式，设置  windows.decorations = true , 将当前组件 隐藏-->
 <!-- 官网示例：https://tauri.app/zh-cn/v1/guides/features/window-customization#html -->
+<!-- 建议使用自定义窗口菜单，因为原生窗口顶部菜单事件处理很麻烦，没有 appWindow 操作简单 -->
 <script setup>
 // Tauri 窗口api: https://tauri.app/zh-cn/v1/api/js/
 import { appWindow } from '@tauri-apps/api/window';

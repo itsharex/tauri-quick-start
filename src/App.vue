@@ -7,7 +7,7 @@ import CustomWindow from './components/customWindow.vue'
 
 <template>
   <div class="container">
-    <CustomWindow />
+    <!-- <CustomWindow /> -->
     <h1>Tauri启动成功!</h1>
     <div class="row">
       <a href="https://vitejs.dev" target="_blank">
